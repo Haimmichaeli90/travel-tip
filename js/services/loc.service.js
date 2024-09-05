@@ -40,7 +40,7 @@ function query() {
                 const regex = new RegExp(gFilterBy.txt, 'i')
                 locs = locs.filter(loc => 
                     regex.test(loc.name) || 
-                    (loc.geo && regex.test(loc.geo.address))
+                    (regex.test(loc.geo.address))
                 )
             }
           
