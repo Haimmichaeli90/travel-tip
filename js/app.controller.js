@@ -69,7 +69,9 @@ function renderLocs(locs) {
 }
 
 function onRemoveLoc(locId) {
-    locService.remove(locId)
+    const Confirmed = confirm('האם אתה בטוח שברצונך למחוק את המיקום הזה?') 
+    if(Confirmed){
+        locService.remove(locId)
         .then(() => {
             flashMsg('Location removed')
             unDisplayLoc()
@@ -79,6 +81,9 @@ function onRemoveLoc(locId) {
             console.error('OOPs:', err)
             flashMsg('Cannot remove location')
         })
+    }else {
+        flashMsg('מחיקה בוטלה')
+    }
 }
 
 function onSearchAddress(ev) {
