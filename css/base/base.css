@@ -1,13 +1,17 @@
 body {
     background-color: var(--bg1);
-    color: #eee;
+    color: #1b1717;
     overflow-x: hidden;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 header {
     background-color: var(--bg2);
-    color: aliceblue;
+    color: #7ad3e5;
     padding: 0.3em;
+    border-radius: 5px;
+    border-style: outset;
+
 }
 
 header h1 {
