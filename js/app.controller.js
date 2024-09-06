@@ -43,6 +43,7 @@ function renderLocs(locs) {
         <li class="loc ${className}" data-id="${loc.id}">
             <h4>  
                 <span>${loc.name}</span>
+                <span>${distance ? ` Distance: ${distance.toFixed(2)} km` : ''}</span>
                 <span title="${loc.rate} stars">${'★'.repeat(loc.rate)}</span>
             </h4>
             <p class="muted">
@@ -50,7 +51,7 @@ function renderLocs(locs) {
                 ${(loc.createdAt !== loc.updatedAt) ?
                 ` | Updated: ${utilService.elapsedTime(loc.updatedAt)}`
                 : ''}
-                ${distance ? ` | Distance: ${distance.toFixed(2)} km` : ''}
+                
             </p>
             <div class="loc-btns">     
                <button title="Delete" onclick="app.onRemoveLoc('${loc.id}')">🗑️</button>
