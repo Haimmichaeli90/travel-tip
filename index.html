@@ -70,6 +70,22 @@
                 </section>
             </section>
         </div>
+        <dialog class="location-dialog">
+            <h3 class="dialog-title">Add Location</h3>
+            <div>
+              <label for="loc-name">Location Name:</label>
+              <input type="text" class="loc-name" name="loc-name" required>
+            </div>
+            <div>
+              <label for="loc-rate">Rate (1-5):</label>
+              <input type="number" class="loc-rate" name="loc-rate" min="1" max="5" value="3" required>
+            </div>
+            <div>
+              <button class="dialog-save">Save</button>
+              <button class="dialog-cancel">Cancel</button>
+            </div>
+          </dialog>
+          
     </main>
     <pre class="debug" hidden></pre>
     <div class="user-msg"></div>

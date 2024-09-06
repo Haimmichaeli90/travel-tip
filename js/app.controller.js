@@ -101,26 +101,44 @@ function onSearchAddress(ev) {
             flashMsg('Cannot lookup address')
         })
 }
-
 function onAddLoc(geo) {
-    const locName = prompt('Loc name', geo.address || 'Just a place')
-    if (!locName) return
+    const dialog = document.querySelector('.location-dialog')
+    const saveBtn = dialog.querySelector('.dialog-save')
+    const cancelBtn = dialog.querySelector('.dialog-cancel')
 
-    const loc = {
-        name: locName,
-        rate: +prompt(`Rate (1-5)`, '3'),
-        geo
+    dialog.querySelector('.dialog-title').innerText = 'Add Location'
+    dialog.querySelector('.loc-name').value = geo.address || 'Just a place'
+    dialog.querySelector('.loc-rate').value = 3
+
+    dialog.showModal()
+
+    saveBtn.onclick = function() {
+        const locName = dialog.querySelector('.loc-name').value
+        const locRate = +dialog.querySelector('.loc-rate').value
+
+        const loc = {
+            name: locName,
+            rate: locRate,
+            geo
+        }
+
+        locService.save(loc)
+            .then(savedLoc => {
+                flashMsg(`Added Location (id: ${savedLoc.id})`)
+                utilService.updateQueryParams({ locId: savedLoc.id })
+                loadAndRenderLocs()
+            })
+            .catch(err => {
+                console.error('OOPs:', err)
+                flashMsg('Cannot add location')
+            })
+
+        dialog.close()
     }
-    locService.save(loc)
-        .then((savedLoc) => {
-            flashMsg(`Added Location (id: ${savedLoc.id})`)
-            utilService.updateQueryParams({ locId: savedLoc.id })
-            loadAndRenderLocs()
-        })
-        .catch(err => {
-            console.error('OOPs:', err)
-            flashMsg('Cannot add location')
-        })
+
+    cancelBtn.onclick = function() {
+        dialog.close()
+    }
 }
 
 function loadAndRenderLocs() {
@@ -150,20 +168,42 @@ function onPanToUserPos() {
 function onUpdateLoc(locId) {
     locService.getById(locId)
         .then(loc => {
-            const rate = prompt('New rate?', loc.rate)
-            if (rate && rate !== loc.rate) {
-                loc.rate = rate
+            const dialog = document.querySelector('.location-dialog')
+            const saveBtn = dialog.querySelector('.dialog-save')
+            const cancelBtn = dialog.querySelector('.dialog-cancel')
+
+            dialog.querySelector('.dialog-title').innerText = 'Update Location'
+            dialog.querySelector('.loc-name').value = loc.name
+            dialog.querySelector('.loc-rate').value = loc.rate
+
+            dialog.showModal()
+
+            saveBtn.onclick = function() {
+                const locName = dialog.querySelector('.loc-name').value
+                const locRate = +dialog.querySelector('.loc-rate').value
+
+                loc.name = locName
+                loc.rate = locRate
+
                 locService.save(loc)
                     .then(savedLoc => {
-                        flashMsg(`Rate was set to: ${savedLoc.rate}`)
+                        flashMsg(`Updated Location (id: ${savedLoc.id})`)
                         loadAndRenderLocs()
                     })
                     .catch(err => {
                         console.error('OOPs:', err)
                         flashMsg('Cannot update location')
                     })
-
+                dialog.close()
             }
+
+            cancelBtn.onclick = function() {
+                dialog.close()
+            }
+        })
+        .catch(err => {
+            console.error('OOPs:', err)
+            flashMsg('Cannot retrieve location for update')
         })
 }
 
