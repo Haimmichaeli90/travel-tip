@@ -30,7 +30,8 @@ export const locService = {
     save,
     setFilterBy,
     setSortBy,
-    getLocCountByRateMap
+    getLocCountByRateMap,
+    getLocCountByUpdateStatus
 }
 
 function query() {
@@ -103,6 +104,29 @@ function getLocCountByRateMap() {
             return locCountByRateMap
         })
 }
+function getLocCountByUpdateStatus() {
+    return storageService.query(DB_KEY)
+        .then(locs => {
+            const now = Date.now()
+            const stats = {
+                today: 0,
+                past: 0,
+                never: 0
+            }
+
+            locs.forEach(loc => {
+                const timeSinceUpdate = now - loc.updatedAt
+                const daysSinceUpdate = timeSinceUpdate / (1000 * 60 * 60 * 24)
+
+                if (daysSinceUpdate < 1) stats.today++
+                else if (daysSinceUpdate < 365) stats.past++
+                else stats.never++
+            })
+
+            stats.total = locs.length
+            return stats
+        })
+}
 
 function setSortBy(sortBy = {}) {
     gSortBy = sortBy
@@ -120,7 +144,7 @@ function _createDemoLocs() {
         [
             {
                 name: "Ben Gurion Airport",
-                rate: 2,
+                rate: 5,
                 geo: {
                     address: "Ben Gurion Airport, 7015001, Israel",
                     lat: 32.0004465,
@@ -140,7 +164,7 @@ function _createDemoLocs() {
             },
             {
                 name: "Dahab, Egypt",
-                rate: 5,
+                rate: 1,
                 geo: {
                     address: "Dahab, South Sinai, Egypt",
                     lat: 28.5096676,
